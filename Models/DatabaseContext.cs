@@ -8,6 +8,7 @@ namespace StoreFront.Models
   public partial class DatabaseContext : DbContext
   {
     public DbSet<StoreItem> StoreItems { get; set; }
+    public DbSet<Location> Locations { get; set; }
     private string ConvertPostConnectionToConnectionString(string connection)
     {
       var _connection = connection.Replace("postgres://", String.Empty);
