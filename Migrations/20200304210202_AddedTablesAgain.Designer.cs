@@ -10,8 +10,8 @@ using StoreFront.Models;
 namespace StoreFront.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20200304182951_AddedTables")]
-    partial class AddedTables
+    [Migration("20200304210202_AddedTablesAgain")]
+    partial class AddedTablesAgain
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,27 @@ namespace StoreFront.Migrations
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 .HasAnnotation("ProductVersion", "3.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            modelBuilder.Entity("StoreFront.Models.Location", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Address")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ManagerName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Locations");
+                });
 
             modelBuilder.Entity("StoreFront.Models.StoreItem", b =>
                 {
@@ -30,6 +51,9 @@ namespace StoreFront.Migrations
 
                     b.Property<DateTime>("DateOrdered")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("LocationId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -48,7 +72,18 @@ namespace StoreFront.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("LocationId");
+
                     b.ToTable("StoreItems");
+                });
+
+            modelBuilder.Entity("StoreFront.Models.StoreItem", b =>
+                {
+                    b.HasOne("StoreFront.Models.Location", "Location")
+                        .WithMany("StoreItems")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -12,7 +12,7 @@ namespace StoreFront.Models
         public double Price { get; set; }
         public DateTime DateOrdered { get; set; }
     
-        public int LocationId { get; set; }
+        public int? LocationId { get; set; }
         public Location Location { get; set; }
     }
 }
