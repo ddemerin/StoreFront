@@ -56,7 +56,7 @@ namespace StoreFront.Controllers
             return Ok(newItem);
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<ActionResult<StoreItem>> UpdateItem(int id, StoreItem newData)
         {
             newData.Id = id;
