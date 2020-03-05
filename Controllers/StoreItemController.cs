@@ -15,32 +15,32 @@ namespace StoreFront.Controllers
     {
         public DatabaseContext db { get; set; } = new DatabaseContext();
 
-        [HttpGet]
-        public async Task<ActionResult<List<StoreItem>>> GetAllItems()
+        [HttpGet("location/{locationid}")]
+        public async Task<ActionResult<List<StoreItem>>> GetAllItemsInLoc(int locationId)
         {
-            var allItems = await db.StoreItems.OrderBy(i => i.Id).ToListAsync();
-            if (allItems == null)
+            var allLocItems = await db.StoreItems.Where(i => i.LocationId == locationId).ToListAsync();
+            if (allLocItems == null)
             {
                 return NotFound();
             }
-            return Ok(allItems);
+            return Ok(allLocItems);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<StoreItem>> GetOneItem(int id)
+        [HttpGet("{id}/{locationid}")]
+        public async Task<ActionResult<List<StoreItem>>> GetOneItemInLoc(int id, int locationId)
         {
-            var item = await db.StoreItems.FirstOrDefaultAsync(i => i.Id == id);
-            if (item == null)
+            var oneLocItem = await db.StoreItems.FirstOrDefaultAsync(i => i.Id == id && i.LocationId == locationId);
+            if (oneLocItem == null)
             {
                 return NotFound();
             }
-            return Ok(item);
+            return Ok(oneLocItem);
         }
 
         [HttpGet("sku/{SKU}")]
         public async Task<ActionResult<StoreItem>> GetSKU(string SKU)
         {
-            var item = await db.StoreItems.FirstOrDefaultAsync(i => i.SKU == SKU);
+            var item = await db.StoreItems.Where(i => i.SKU == SKU).ToListAsync();
             if (item == null)
             {
                 return NotFound();
@@ -48,27 +48,51 @@ namespace StoreFront.Controllers
             return Ok(item);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<StoreItem>> AddItem(StoreItem newItem)
+        [HttpGet("outofstock")]
+        public async Task<ActionResult<List<StoreItem>>> GetOutOfStock()
         {
+            var outOfStock = await db.StoreItems.Where(i => i.NumberInStock == 0).ToListAsync();
+            if (outOfStock == null)
+            {
+                return NotFound();
+            }
+            return Ok(outOfStock.ToList());
+        }
+
+        [HttpGet("outofstock/{locationId}")]
+         public async Task<ActionResult<List<StoreItem>>> GetOutOfStockFromLoc(int locationId)
+        {
+            var outOfStock = await db.StoreItems.Where(i => i.NumberInStock == 0 && i.LocationId == locationId).ToListAsync();
+            if (outOfStock == null)
+            {
+                return NotFound();
+            }
+            return Ok(outOfStock.ToList());
+        }
+
+        [HttpPost("{locationId}")]
+        public async Task<ActionResult<StoreItem>> AddItemToLoc (int locationId, StoreItem newItem)
+        {
+            newItem.LocationId = locationId;
             await db.StoreItems.AddAsync(newItem);
             await db.SaveChangesAsync();
             return Ok(newItem);
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<StoreItem>> UpdateItem(int id, StoreItem newData)
+        [HttpPut("{id}/{locationid}")]
+        public async Task<ActionResult<StoreItem>> UpdateItemInLoc (int id, int locationId, StoreItem newData)
         {
             newData.Id = id;
+            newData.LocationId = locationId;
             db.Entry(newData).State = EntityState.Modified;
             await db.SaveChangesAsync();
             return Ok(newData);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteOne(int id)
+        [HttpDelete("{id}/{locationId}")]
+        public async Task<ActionResult> DeleteOne(int id, int locationId)
         {
-            var item = await db.StoreItems.FirstOrDefaultAsync(i => i.Id == id);
+            var item = await db.StoreItems.FirstOrDefaultAsync(i => i.Id == id && i.LocationId == locationId);
             if (item == null)
             {
                 return NotFound();

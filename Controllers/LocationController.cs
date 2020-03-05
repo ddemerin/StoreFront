@@ -16,7 +16,7 @@ namespace StoreFront.Controllers
         public DatabaseContext db { get; set; } = new DatabaseContext();
         
         [HttpPost]
-        public async Task<ActionResult<Location>> AddItem(Location newLocation)
+        public async Task<ActionResult<Location>> AddLoc(Location newLocation)
         {
             await db.Locations.AddAsync(newLocation);
             await db.SaveChangesAsync();
