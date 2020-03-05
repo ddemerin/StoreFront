@@ -10,8 +10,8 @@ using StoreFront.Models;
 namespace StoreFront.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20200304210202_AddedTablesAgain")]
-    partial class AddedTablesAgain
+    [Migration("20200305185950_AddedTablesAGAIN")]
+    partial class AddedTablesAGAIN
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -52,7 +52,7 @@ namespace StoreFront.Migrations
                     b.Property<DateTime>("DateOrdered")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("LocationId")
+                    b.Property<int?>("LocationId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
@@ -81,9 +81,7 @@ namespace StoreFront.Migrations
                 {
                     b.HasOne("StoreFront.Models.Location", "Location")
                         .WithMany("StoreItems")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("LocationId");
                 });
 #pragma warning restore 612, 618
         }

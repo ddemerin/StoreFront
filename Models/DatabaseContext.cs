@@ -21,7 +21,6 @@ namespace StoreFront.Models
       if (!optionsBuilder.IsConfigured)
       {
         var envConn = Environment.GetEnvironmentVariable("DATABASE_URL");
-// #error Update this connection string to point to your own database.
         var conn = "server=localhost;database=StoreFrontDatabase";
         if (envConn != null)
         {

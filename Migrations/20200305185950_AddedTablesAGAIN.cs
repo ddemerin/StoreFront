@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace StoreFront.Migrations
 {
-    public partial class AddedTablesAgain : Migration
+    public partial class AddedTablesAGAIN : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -35,7 +35,7 @@ namespace StoreFront.Migrations
                     NumberInStock = table.Column<int>(nullable: false),
                     Price = table.Column<double>(nullable: false),
                     DateOrdered = table.Column<DateTime>(nullable: false),
-                    LocationId = table.Column<int>(nullable: false)
+                    LocationId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -45,7 +45,7 @@ namespace StoreFront.Migrations
                         column: x => x.LocationId,
                         principalTable: "Locations",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
