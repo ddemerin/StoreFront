@@ -48,6 +48,17 @@ namespace StoreFront.Controllers
             return Ok(item);
         }
 
+        [HttpGet("outofstock")]
+        public async Task<ActionResult<List<StoreItem>>> GetOutOfStock()
+        {
+            var outOfStock = await db.StoreItems.Where(i => i.NumberInStock == 0).ToListAsync();
+            if (outOfStock == null)
+            {
+                return NotFound();
+            }
+            return Ok(outOfStock.ToList());
+        }
+
         [HttpPost]
         public async Task<ActionResult<StoreItem>> AddItem(StoreItem newItem)
         {
