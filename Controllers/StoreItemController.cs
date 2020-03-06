@@ -18,12 +18,12 @@ namespace StoreFront.Controllers
         [HttpGet]
         public async Task<ActionResult<List<StoreItem>>> GetAllItems()
         {
-            var allItems = await db.StoreItems.OrderBy(i => i.Id).ToListAsync();
+            var allItems = db.StoreItems.OrderBy(i => i.Id);
             if (allItems == null)
             {
                 return NotFound();
             }
-            return Ok(allItems);
+            return Ok(await allItems.ToListAsync());
         }
 
         [HttpGet("location/{locationid}")]
