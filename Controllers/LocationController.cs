@@ -26,12 +26,12 @@ namespace StoreFront.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Location>>> GetAllLocation()
         {
-            var allLocs = await db.Locations.OrderBy(i => i.Id).ToListAsync();
+            var allLocs = db.Locations.OrderBy(i => i.Id);
             if (allLocs == null)
             {
                 return NotFound();
             }
-            return Ok(allLocs);
+            return Ok(await allLocs.ToListAsync());
         }
     }
 }

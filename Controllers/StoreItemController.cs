@@ -15,15 +15,26 @@ namespace StoreFront.Controllers
     {
         public DatabaseContext db { get; set; } = new DatabaseContext();
 
+        [HttpGet]
+        public async Task<ActionResult<List<StoreItem>>> GetAllItems()
+        {
+            var allItems = await db.StoreItems.OrderBy(i => i.Id).ToListAsync();
+            if (allItems == null)
+            {
+                return NotFound();
+            }
+            return Ok(allItems);
+        }
+
         [HttpGet("location/{locationid}")]
         public async Task<ActionResult<List<StoreItem>>> GetAllItemsInLoc(int locationId)
         {
-            var allLocItems = await db.StoreItems.Where(i => i.LocationId == locationId).ToListAsync();
+            var allLocItems = db.StoreItems.Where(i => i.LocationId == locationId);
             if (allLocItems == null)
             {
                 return NotFound();
             }
-            return Ok(allLocItems);
+            return Ok(await allLocItems.ToListAsync());
         }
 
         [HttpGet("{id}/{locationid}")]
@@ -40,34 +51,34 @@ namespace StoreFront.Controllers
         [HttpGet("sku/{SKU}")]
         public async Task<ActionResult<StoreItem>> GetSKU(string SKU)
         {
-            var item = await db.StoreItems.Where(i => i.SKU == SKU).ToListAsync();
+            var item = db.StoreItems.Where(i => i.SKU == SKU);
             if (item == null)
             {
                 return NotFound();
             }
-            return Ok(item);
+            return Ok(await item.ToListAsync());
         }
 
         [HttpGet("outofstock")]
         public async Task<ActionResult<List<StoreItem>>> GetOutOfStock()
         {
-            var outOfStock = await db.StoreItems.Where(i => i.NumberInStock == 0).ToListAsync();
+            var outOfStock = db.StoreItems.Where(i => i.NumberInStock == 0);
             if (outOfStock == null)
             {
                 return NotFound();
             }
-            return Ok(outOfStock.ToList());
+            return Ok(await outOfStock.ToListAsync());
         }
 
         [HttpGet("outofstock/{locationId}")]
          public async Task<ActionResult<List<StoreItem>>> GetOutOfStockFromLoc(int locationId)
         {
-            var outOfStock = await db.StoreItems.Where(i => i.NumberInStock == 0 && i.LocationId == locationId).ToListAsync();
+            var outOfStock = db.StoreItems.Where(i => i.NumberInStock == 0 && i.LocationId == locationId);
             if (outOfStock == null)
             {
                 return NotFound();
             }
-            return Ok(outOfStock.ToList());
+            return Ok(await outOfStock.ToListAsync());
         }
 
         [HttpPost("{locationId}")]
