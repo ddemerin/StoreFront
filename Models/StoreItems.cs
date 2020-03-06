@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace StoreFront.Models
 {
@@ -14,5 +15,7 @@ namespace StoreFront.Models
     
         public int? LocationId { get; set; }
         public Location Location { get; set; }
+
+        public List<ItemOrder> ItemOrders { get; set; } = new List<ItemOrder>();
     }
 }
